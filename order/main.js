@@ -49,14 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleAddNewItemButtonClick(e) {
         e.preventDefault()
-        const newItemName = document.querySelector("#new-item").value
+        const newItemName = document.querySelector("#new-item")
         menu.push({
-            "name": newItemName,
+            "name": newItemName.value,
             "price": 0,
             "quantity": 0
         })
+
         renderMenu()
         itemsHtml = document.querySelectorAll(".item")
+        newItemName.value = ""
     }
 
 
