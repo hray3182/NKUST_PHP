@@ -16,22 +16,28 @@ let menu = [
     },
 ]
 
-let menuHtml = ""
-menu.forEach((item) => {
-    menuHtml += `
-    <tr class="item">
-        <td class="item-name">${item.name}</td>
-        <td><input class="item-price outline-none text-center bg-transparent border-2 rounded-lg mt-1"value=${item.price}></td>
-        <td>
-            <input class="item-quantity bg-transparent text-center outline-none border-2 rounded-lg"  value="${item.quantity}" min="0" data-name="${item.name}" class="quantity">
-        </td>
-    </tr>
-    `
-})
+
 
 const tbody = document.querySelector("tbody")
-tbody.innerHTML = menuHtml
 
+
+function renderMenu() {
+    let menuHtml = ""
+    menu.forEach((item) => {
+        menuHtml += `
+        <tr class="item">
+            <td class="item-name">${item.name}</td>
+            <td><input class="item-price outline-none text-center bg-transparent border-2 rounded-lg mt-1"value=${item.price} data-name="${item.name}"></td>
+            <td>
+                <input class="item-quantity bg-transparent text-center outline-none border-2 rounded-lg"  value="${item.quantity}" min="0" data-name="${item.name}" class="quantity">
+            </td>
+        </tr>
+        `
+    })
+    tbody.innerHTML = menuHtml
+}
+
+renderMenu()
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -49,17 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "price": 0,
             "quantity": 0
         })
-        const newItemHtml = `
-        <tr class="item">
-            <td class="item-name">${newItemName}</td>
-            <td><input class="item-price outline-none text-center bg-transparent border-2 rounded-lg mt-1" value=${0}></td>
-            <td>
-                <input class="item-quantity bg-transparent text-center outline-none border-2 rounded-lg"  value="${0}" min="0" data-name="${newItemName}" class="quantity">
-            </td>
-        </tr>
-        `
-
-        tbody.innerHTML += newItemHtml
+        renderMenu()
         itemsHtml = document.querySelectorAll(".item")
     }
 
@@ -103,10 +99,23 @@ document.addEventListener("DOMContentLoaded", () => {
         orderDetial.innerHTML = orderDetialHtml
     }
 
+    function handleQuantityAndPriceChange(e) {
+        const name = e.target.dataset.name
+        console.log(name)
+        const price = e.target.closest(".item").querySelector(".item-price").value
+        const quantity = e.target.closest(".item").querySelector(".item-quantity").value
+        const index = menu.findIndex((item) => item.name === name)
+        menu[index].price = price
+        menu[index].quantity = quantity
+        console.log(menu)
+    }
 
 
     checkButton.addEventListener("click", (e) => handleCheckoutButtonClick(e))
     addNewItem.addEventListener("click", (e) => handleAddNewItemButtonClick(e))
-
+    itemsHtml.forEach((item) => {
+        item.querySelector(".item-quantity").addEventListener("change", (e) => handleQuantityAndPriceChange(e))
+        item.querySelector(".item-price").addEventListener("change", (e) => handleQuantityAndPriceChange(e))
+    })
 })
 
